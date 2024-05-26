@@ -18,4 +18,4 @@ jobs:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
     - name: Execute deployment script
-      run: ssh -o StrictHostKeyChecking=no ec2-user@<your-ec2-ip-address> 'cd /home/ec2-user/Projects/Test && ./deploy.sh'
+      run: ssh -o StrictHostKeyChecking=no ec2-user@10.40.15.132 'cd /home/ec2-user/Projects/Test && ./deploy.sh'
