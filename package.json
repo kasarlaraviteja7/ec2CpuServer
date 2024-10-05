@@ -1,0 +1,26 @@
+{
+  "name": "ec2CpuServer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kasarlaraviteja7/ec2CpuServer.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kasarlaraviteja7/ec2CpuServer/issues"
+  },
+  "homepage": "https://github.com/kasarlaraviteja7/ec2CpuServer#readme",
+  "dependencies": {
+    "express": "^4.21.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
