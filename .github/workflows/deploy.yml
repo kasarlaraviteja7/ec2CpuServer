@@ -1,26 +1,46 @@
-name: Deploy to EC2
+name: CI/CD Pipeline
 
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [20.x]
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Set up SSH
-      uses: webfactory/ssh-agent@v0.5.4
+    - name: Set up Node.js (or Python or any other environment you need)
+      uses: actions/setup-node@v2
       with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+        node-version: '14' # Change if necessary
 
-    - name: Execute deployment script
-      run: |
-        ssh -o StrictHostKeyChecking=no ec2-user@10.40.15.132 'cd /home/ec2-user/Projects/Test && ./deploy.sh'
+    - name: Install dependencies
+      run: npm install # Change if necessary for your app
+
+    - name: Run tests
+      run: npm test # Change if necessary for your app
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Deploy to EC2
+      uses: appleboy/ssh-action@v0.1.1
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ec2-user
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          cd /path/to/your/app
+          git pull origin main
+          # If using Docker, adjust these commands accordingly
+          docker-compose down
+          docker-compose up -d --build
