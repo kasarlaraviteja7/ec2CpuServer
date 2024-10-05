@@ -3,7 +3,7 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - master
+      - master  # or master, depending on your default branch
 
 jobs:
   build:
@@ -11,18 +11,18 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3  # Updated to v3
 
-    - name: Set up Node.js (or Python or any other environment you need)
-      uses: actions/setup-node@v2
+    - name: Set up Node.js
+      uses: actions/setup-node@v3  # Updated to v3
       with:
-        node-version: '14' # Change if necessary
+        node-version: '20'  # Updated to a supported version
 
     - name: Install dependencies
-      run: npm install # Change if necessary for your app
+      run: npm install  # Adjust this as needed
 
     - name: Run tests
-      run: npm test # Change if necessary for your app
+      run: npm test  # Adjust this as needed
 
   deploy:
     runs-on: ubuntu-latest
@@ -30,7 +30,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3  # Updated to v3
 
     - name: Deploy to EC2
       uses: appleboy/ssh-action@v0.1.1
