@@ -27,13 +27,15 @@ jobs:
       - name: Run tests
         run: npm test
 
-      # Set up SSH agent with your EC2 private key from GitHub Secrets
-      - name: Set up SSH agent
-        uses: webfactory/ssh-agent@v0.5.3
-        with:
-          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
-
-      # Deploy the application to EC2
+      # Deploy to EC2 using appleboy/ssh-action
       - name: Deploy to EC2
-        run: |
-          ssh -o StrictHostKeyChecking=no ec2-user@your-ec2-ip-address 'cd /path/to/your/project && git pull origin master && npm install && pm2 restart app_name' # Adjust to match your project structure
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /path/to/your/project
+            git pull origin master
+            npm install
+            pm2 restart app_name
