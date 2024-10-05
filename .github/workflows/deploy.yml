@@ -12,10 +12,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Print environment variables
-        run: |
-          echo "EC2_HOST: ${{ secrets.EC2_HOST }}"
-          echo "Deploying to EC2..."
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
 
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v0.1.0
@@ -24,10 +30,8 @@ jobs:
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            echo "Changing directory to project..."
+            set -x  # Enable debug output
             cd /home/ec2-user/projects/test/ec2CpuServer || { echo "Directory not found"; exit 1; }
-            echo "Pulling latest code..."
-            git pull origin master || { echo "Failed to pull"; exit 1; }
-            echo "Starting the application..."
-            pm2 start app.py --interpreter python3 --name app_name || { echo "Failed to start application"; exit 1; }
-            echo "Deployment complete."
+            git pull origin master || { echo "Git pull failed"; exit 1; }
+            npm install || { echo "NPM install failed"; exit 1; }
+            pm2 restart app_name || { echo "PM2 restart failed"; exit 1; }
