@@ -3,44 +3,22 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - master  # or master, depending on your default branch
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3  # Updated to v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3  # Updated to v3
-      with:
-        node-version: '20'  # Updated to a supported version
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
 
-    - name: Install dependencies
-      run: npm install  # Adjust this as needed
+      - name: Install dependencies
+        run: npm install
 
-    - name: Run tests
-      run: npm test  # Adjust this as needed
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3  # Updated to v3
-
-    - name: Deploy to EC2
-      uses: appleboy/ssh-action@v0.1.1
-      with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ec2-user
-        key: ${{ secrets.EC2_SSH_KEY }}
-        script: |
-          cd /path/to/your/app
-          git pull origin main
-          # If using Docker, adjust these commands accordingly
-          docker-compose down
-          docker-compose up -d --build
+      - name: Run tests
+        run: npm test
