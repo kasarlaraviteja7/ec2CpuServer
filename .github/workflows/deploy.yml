@@ -9,16 +9,31 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      # Checkout code from the repository
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # Set up Node.js version 20
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20'
 
+      # Install project dependencies
       - name: Install dependencies
         run: npm install
 
+      # Run tests
       - name: Run tests
         run: npm test
+
+      # Set up SSH agent with your EC2 private key from GitHub Secrets
+      - name: Set up SSH agent
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+
+      # Deploy the application to EC2
+      - name: Deploy to EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no ec2-user@your-ec2-ip-address 'cd /path/to/your/project && git pull origin master && npm install && pm2 restart app_name' # Adjust to match your project structure
